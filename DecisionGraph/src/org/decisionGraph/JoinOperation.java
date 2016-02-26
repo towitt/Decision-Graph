@@ -41,7 +41,7 @@ public class JoinOperation extends Operation{
 	}
 	
 	/**
-	 * Method to join together nodes.
+	 * Method to join together a list of nodes.
 	 * @param nodes - list of nodes involved in the join
 	 */
 	public void joinNodes(ArrayList<TreeNode> nodes){
