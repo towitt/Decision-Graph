@@ -111,9 +111,8 @@ public class DecisionGraph{
 			String attr = node.getSplitAttribute();							
 			int col = this.trainingData.getColIndex(attr);		
 			
-			// Distinguish between a split on a categorical and a continuous attribute
-			
-			// CONTINUOUS ATTRIBUTE
+			// Distinguish between a split on a (1) categorical and a (2) numerical/continuous attribute		
+			// Case (1)
 			if(node.getContinuousSplit()){				
 															
 				// there can only be two children - get them
@@ -131,9 +130,8 @@ public class DecisionGraph{
 				else return classify(row, v2);														
 			}
 			
-			// CATEGORICAL ATTRIBUTE
-			else{							
-				
+			// Case (2)
+			else{											
 				// looper over all children
 				for(TreeNode v : node.getChildren()){	
 					

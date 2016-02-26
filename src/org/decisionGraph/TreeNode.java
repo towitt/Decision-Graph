@@ -23,16 +23,12 @@ public class TreeNode {
 	private Set<String> splitSavings;
 	
 	/**
-	 * Constructor for a node 	
+	 * Constructor
 	 * @param parent - the parent of this node
 	 * @param parentSplitValue - the value of the parent attribute leading to this node
-	 * @param remainingData - the partition of the original data created by traversing the tree up to this node
-	 * @param remainingAttributes - the attributes not yet used for splitting
-	 * @param classVec - vector of class values for the remaining elements
+	 * @param remainingData - the subset of the original data 
 	 */
-	public TreeNode(TreeNode parent, 
-			DataCell parentSplitValue, 			
-			Data remainingData){
+	public TreeNode(TreeNode parent, DataCell parentSplitValue, Data remainingData){
 		this.parent = parent;
 		this.parentSplitValue = parentSplitValue;
 		this.children = null; 
