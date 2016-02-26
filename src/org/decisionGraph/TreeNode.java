@@ -9,7 +9,6 @@ import java.util.Set;
 import org.knime.core.data.DataCell;
 import org.knime.core.data.def.DoubleCell;
 
-
 public class TreeNode {
 	private String splitAttribute;
 	private TreeNode parent;
@@ -23,19 +22,6 @@ public class TreeNode {
 	private SplitOperation bestSplit;
 	private Set<String> splitSavings;
 	
-	public Set<String> getSplitSavings() {
-		return splitSavings;
-	}
-
-	public void setSplitSavings(Set<String> positiveSplitSavings) {
-		this.splitSavings = positiveSplitSavings;
-	}
-	
-	public void addSplitSavings(String attribute) {
-		if(this.splitSavings == null) this.splitSavings = new HashSet<String>();
-		this.splitSavings.add(attribute);
-	}
-
 	/**
 	 * Constructor for a node 	
 	 * @param parent - the parent of this node
@@ -126,6 +112,33 @@ public class TreeNode {
 		this.setContinuousSplit(false);
 	}
 	
+	/**
+	 * Method to compute a map which holds the frequency of each class value in the node
+	 */
+	public void computeClassFreq(){
+		
+		// if no observation is left, we use the frequency table of the parent
+		if(this.classVec.size() == 0){
+			this.setClassFreq(this.getParent().getClassFreq());
+			return;
+		}
+		
+		// loop over the instances in the node and fill the map
+		Map<DataCell, Integer> classFreq = new HashMap<DataCell, Integer>();		
+		for(DataCell c : this.getClassVec()){			
+			
+			// put class/frequency pair in the map
+			if(!classFreq.containsKey(c)){
+				classFreq.put(c, 0);
+			}			
+			
+			// update class frequency
+			classFreq.put(c, classFreq.get(c) + 1);					
+		} 
+		
+		// set the class frequency table of the leaf node
+		this.setClassFreq(classFreq);		
+	}
 	
 	/**
 	 * Method to obtain the most frequent class value in a node
@@ -183,6 +196,19 @@ public class TreeNode {
 	public void addChild(TreeNode child) {
 		if(this.children == null) this.children = new ArrayList<TreeNode>();
 		this.children.add(child);
+	}
+	
+	public Set<String> getSplitSavings() {
+		return splitSavings;
+	}
+
+	public void setSplitSavings(Set<String> positiveSplitSavings) {
+		this.splitSavings = positiveSplitSavings;
+	}
+	
+	public void addSplitSavings(String attribute) {
+		if(this.splitSavings == null) this.splitSavings = new HashSet<String>();
+		this.splitSavings.add(attribute);
 	}
 	
 	public void setClassFreq(Map<DataCell, Integer> classFreq){
@@ -248,27 +274,7 @@ public class TreeNode {
 	public Boolean getContinuousSplit(){
 		return this.continuousSplit;
 	}
-	
-	public void computeClassFreq(){
 		
-		if(this.classVec.size() == 0){
-			this.setClassFreq(this.getParent().getClassFreq());
-			return;
-		}
-		
-		Map<DataCell, Integer> classFreq = new HashMap<DataCell, Integer>();
-		
-		for(DataCell c : this.getClassVec()){				
-			if(!classFreq.containsKey(c)){
-				classFreq.put(c, 0);
-			}			
-			classFreq.put(c, classFreq.get(c) + 1);					
-		} 
-		
-		// set the class frequency table of the leaf node
-		this.setClassFreq(classFreq);		
-	}
-	
 	public void setBestSplit(SplitOperation split){
 		this.bestSplit = split;
 	}

@@ -61,7 +61,7 @@ public class DecisionGraph{
 				System.out.println("The final graph has " + this.leaves.size() + " leaves");
 			}			
 		
-			// if message length can be reduced, perform operation on the tree
+			// if message length can be reduced, perform operation on the graph
 			else{			
 				ocount++;
 				bestOp.perform();
@@ -70,7 +70,7 @@ public class DecisionGraph{
 				System.out.println("------------------------------------------");
 				System.out.println("Operation " + ocount + ":");
 				bestOp.getInfo();
-				System.out.println("Now, the tree has " + this.leaves.size() + " leaves");
+				System.out.println("Now, the graph has " + this.leaves.size() + " leaves");
 				System.out.println("The new message length is: " + Math.round(this.messageLength));
 				System.out.println("------------------------------------------ \n");
 			}				
@@ -78,8 +78,7 @@ public class DecisionGraph{
 	}	
 	
 	/**
-	 * Public method to start the classification of a data record. Traverses the tree from
-	 * the root until a leaf is reached.
+	 * Method to start the classification of a data record. 
 	 * @param row - the data record that should be classified	
 	 * @return the predicted class value for the data record
 	 */
@@ -88,10 +87,9 @@ public class DecisionGraph{
 	}
 	
 	/**
-	 * Private method to classify a data record. The method recursively traverses the decision tree 
-	 * until a leaf node is found. It then returns the majority class value observed at this leaf.
+	 * Private method to classify a data record. 
 	 * @param row - the data record that should be classified	
-	 * @param node - the current node in the tree
+	 * @param node - node in the graph
 	 * @return the predicted class value for the data record
 	 */
 	private String classify(DataRow row, TreeNode node){		
