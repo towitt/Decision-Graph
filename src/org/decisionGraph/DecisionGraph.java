@@ -31,6 +31,7 @@ public class DecisionGraph{
 		this.ml = ml;		
 		this.allowJoins = allowJoins;		
 		this.maxJoinNodes = maxJoinNodes;
+		this.learnGraph();
 	}	
 		
 	/**

@@ -87,14 +87,11 @@ public class DecisionGraphNodeModel extends NodeModel {
         // create the Message Length object
         MessageLength ml = new MessageLength(m_alpha.getDoubleValue(), C);
                
-        // create the graph object     
+        // learn the decision graph    
         if(!m_restrictjoinnodes.getBooleanValue()) m_maxjoinnodes.setIntValue(Integer.MAX_VALUE);     
 		DecisionGraph graph = new DecisionGraph(trainingData, ml, m_joins.getBooleanValue(),
 				m_maxjoinnodes.getIntValue());				
-		
-		// learn the decision graph
-		graph.learnGraph();	
-		
+			
 		// make prediction for test data set
 		BufferedDataTable testData = inData[1];
         CellFactory cellFactory = 
@@ -129,22 +126,23 @@ public class DecisionGraphNodeModel extends NodeModel {
     protected DataTableSpec[] configure(final DataTableSpec[] inSpecs)
             throws InvalidSettingsException {
     	
+    	DataTableSpec inputSpec = inSpecs[0];
+    	
     	 // check spec with selected column
-    	DataColumnSpec columnSpec = inSpecs[0].getColumnSpec(m_class.getStringValue());
+    	DataColumnSpec columnSpec = inputSpec.getColumnSpec(m_class.getStringValue());
     	if (columnSpec == null || !columnSpec.getType().isCompatible(NominalValue.class)) {
     		// if no useful column is selected guess one
     		// get the first useful one starting at the end of the table
-    		for (int i = inSpecs[0].getNumColumns() - 1; i >= 0; i--) {
-    			
-    			if (inSpecs[0].getColumnSpec(i).getType().isCompatible(NominalValue.class)) {
-    				m_class.setStringValue(inSpecs[0].getColumnSpec(i).getName());
+    		for (int i = inputSpec.getNumColumns() - 1; i >= 0; i--) {   			
+    			if (inputSpec.getColumnSpec(i).getType().isCompatible(NominalValue.class)) {
+    				m_class.setStringValue(inputSpec.getColumnSpec(i).getName());
     				break;
     			}
-    			throw new InvalidSettingsException("Table contains no nominal" + " attribute for classification.");
-        }
-    }
+    		throw new InvalidSettingsException("Table contains no nominal" + " attribute for classification.");
+    		}
+    	}
     	
-    	DataTableSpec inputSpec = inSpecs[0];
+    	
     	
     	// check if input data includes class column
     	if(inputSpec.containsName(m_class.getStringValue())){

@@ -313,7 +313,7 @@ public class MessageLength {
 			if(joinList.getPendingNodes().contains(newNode)) Y += 1;
 		}
 		
-		// calculate the length for the parts of the joining pattern message
+		// calculate the length of the joining pattern message
 		double ml1 = encodeJoinPattern1(N, Q);
 		double ml2 = encodeJoinPattern2(N, Q, M);		
 		double ml3 = encodeJoinPattern3(N, Q, Y, P, M, J, X);			
