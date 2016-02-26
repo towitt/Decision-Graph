@@ -87,7 +87,7 @@ public class ContinuousSplit {
 	/**
 	 * Identify all eligible cut values, i.e., those points where the class variable changes
 	 * @param sortedMap - a map in which the entries are sorted by key
-	 * @return set with all eligible cut points
+	 * @return set with all eligible cut values
 	 */
 	private TreeSet<Double> getSortedCutValues(Multimap<Double, String> sortedMap){	
 		
