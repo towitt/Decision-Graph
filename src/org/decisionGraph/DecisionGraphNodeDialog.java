@@ -36,6 +36,11 @@ public class DecisionGraphNodeDialog extends DefaultNodeSettingsPane {
         // JOIN SETTINGS
         createNewGroup("Join Settings");
         
+        // always prefer joins over splits?
+        addDialogComponent(new DialogComponentBoolean(
+        		DecisionGraphNodeModel.m_prefjoins, 
+        		DecisionGraphNodeModel.CFGKEY_PREFJOINS));
+        
         // restrict the number of nodes which form a join?
         addDialogComponent(new DialogComponentBoolean(
         		DecisionGraphNodeModel.m_restrictjoinnodes, 
@@ -46,6 +51,16 @@ public class DecisionGraphNodeDialog extends DefaultNodeSettingsPane {
                 DecisionGraphNodeModel.m_maxjoinnodes, ""));                      
         
         // add change listeners so that join settings are only accessible if joins are allowed
+       DecisionGraphNodeModel.m_joins.addChangeListener(
+        		new ChangeListener() {
+        			@Override
+        			public void stateChanged(ChangeEvent arg0) {        			
+        				DecisionGraphNodeModel.m_prefjoins.
+        				setEnabled(DecisionGraphNodeModel.m_joins.getBooleanValue());		
+        			}
+        		}
+        );
+        
         DecisionGraphNodeModel.m_joins.addChangeListener(
         		new ChangeListener() {
         			@Override

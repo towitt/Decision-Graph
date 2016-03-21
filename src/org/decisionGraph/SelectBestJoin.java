@@ -21,7 +21,7 @@ public class SelectBestJoin {
 	 */
 	protected static JoinOperation select(ArrayList<TreeNode> nodes, TreeNode root, double currentML, 
 			MessageLength ml, int maxJoinNodes){
-		
+	
 		// initialize best join operation object
 		JoinOperation bestJoin = new JoinOperation(null, 0.0);		
 		
@@ -29,7 +29,7 @@ public class SelectBestJoin {
 		Set<int[]> testedComb = new HashSet<int[]>();		
 		
 		// create a map which saves for each attribute the nodes with split savings on the attribute
-		HashMap<String, ArrayList<TreeNode>> savingsMap = createSavingsMap(nodes);
+		HashMap<String, ArrayList<TreeNode>> savingsMap = createSavingsMap(nodes);		
 				
 		// loop over entries of the savings map and test all join combinations to search for the best join
 		for(String attribute : savingsMap.keySet()){
@@ -93,7 +93,7 @@ public class SelectBestJoin {
 	 * @return the join operation with the highest communication savings
 	 */
 	protected static JoinOperation testJoinCombinations(ArrayList<TreeNode> nodes, TreeNode root, 
-			double currentML, MessageLength ml, int maxJoinNodes, Set<int[]> testedComb){				
+			double currentML, MessageLength ml, int maxJoinNodes, Set<int[]> testedComb){								
 		
 		// the number of nodes possibly involved in a join		
 		int N = nodes.size();		
@@ -107,11 +107,11 @@ public class SelectBestJoin {
 		JoinOperation bestJoin = new JoinOperation(null, 0.0);
 		
 		// if there is only one node, no join is possible
-		if(N == 1) return bestJoin;
+		if(N == 1) return bestJoin;				
 			
 		// test all combinations -> binomial(N, K)
-		for(int K = 2; K < N; K++){
-							
+		for(int K = 2; K <= N; K++){
+			
 			// get the combination by index        
 			int combination[] = new int[K];
          
@@ -124,8 +124,7 @@ public class SelectBestJoin {
 					combination[r] = index;                    
                 
 					// if we are at the last position print and increase the index
-					if(r == K-1){
-                	
+					if(r == K-1){					
 						// at this point we obtained one combination pattern of the desired size												
 						// check if combination was already tested
 						if(!testedComb.contains(combination)){														
@@ -190,15 +189,21 @@ public class SelectBestJoin {
 	 */
 	protected static double calculateMLsavings(JoinOperation join, TreeNode root, double currentML, 
 			MessageLength ml){	
+				
+		// current ML
+		double curML = 0.0; 
+		for(TreeNode v : join.getNodes()){
+			curML += ml.treeLength(v);						
+		}
 		
 		// perform the join
-		join.perform();		
+		join.perform();	
 		
-		// calculate the new message length of the graph		
-		double newML = ml.graphLength(root);
+		// new ML
+		double newML = ml.treeLength(join.getJoinedNode());
 		
-		// calculate the savings obtained with the join
-		double savings = currentML - newML;
+		// calculate the savings obtained with the join		
+		double savings = curML - newML;						
 		
 		// reverse the join
 		join.reverse();

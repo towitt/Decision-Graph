@@ -38,6 +38,14 @@ public class JoinOperation extends Operation{
 	public void getInfo(){ 
 		System.out.println("Performing a Join of " + this.nodes.size() + " nodes");
 		System.out.println("Savings are " + Math.round(this.savings) + " bits (rounded)");
+		System.out.println("Involved nodes: ");
+		for(TreeNode v : this.nodes){
+			System.out.print(v.getParent().getSplitAttribute() + " = " + v.getParentSplitValue());
+			System.out.print(" | nr. of instances: " + v.getClassVec().size());
+			System.out.println(" | class frequencies " + v.getClassFreq());
+		}
+		System.out.print("New (joined) node: " + this.joinedNode.getClassVec().size() + " instances");
+		System.out.println(" | class frequencies " + this.joinedNode.getClassFreq());	
 	}
 	
 	/**

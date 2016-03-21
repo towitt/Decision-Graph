@@ -47,8 +47,19 @@ public class SplitOperation extends Operation{
 	@Override
 	public void getInfo(){ 
 		System.out.println("Performing a split on attribute " + this.splitAttribute);
+		TreeNode v = this.node.getParent();
+		if(v != null){
+			if(v.isJoin()) System.out.println("Parent is join node");
+			else{
+			System.out.println("Branch leading to this node: " + 
+					v.getSplitAttribute() + " = " + this.node.getParentSplitValue());
+			}
+		}
 		if(this.continuousSplit) System.out.println("The cut value is " + this.cutValue);
 		System.out.println("Savings are " + Math.round(this.savings) + " bits (rounded)");
+		for(TreeNode node : this.node.getChildren()){
+			System.out.println(node.getParentSplitValue() + " -> " + node.getClassFreq());
+		}
 	}
 
 	public void setNode(TreeNode node) {

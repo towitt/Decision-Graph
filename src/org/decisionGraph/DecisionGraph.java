@@ -15,6 +15,7 @@ public class DecisionGraph{
 	private double messageLength;
 	private MessageLength ml;
 	private boolean allowJoins;
+	private boolean prefJoins;
 	private int maxJoinNodes;
 	
 	/**
@@ -24,13 +25,15 @@ public class DecisionGraph{
 	 * @param allowJoins - if joins are allowed a decision graph instead of a tree is constructed
 	 * @param maxJoinNodes - the maximum number of nodes involved in a join
 	 */
-	public DecisionGraph(Data trainingData, MessageLength ml, boolean allowJoins, int maxJoinNodes){
+	public DecisionGraph(Data trainingData, MessageLength ml, boolean allowJoins, 
+			boolean prefJoins, int maxJoinNodes){
 		this.root = null;
 		this.trainingData = trainingData;	
 		this.attributes = trainingData.getAttributes();
 		this.ml = ml;		
-		this.allowJoins = allowJoins;		
-		this.maxJoinNodes = maxJoinNodes;
+		this.allowJoins = allowJoins;	
+		this.prefJoins = prefJoins;
+		this.maxJoinNodes = maxJoinNodes;		
 		this.learnGraph();
 	}	
 		
@@ -40,15 +43,11 @@ public class DecisionGraph{
 	public void learnGraph(){										
 						
 		// create object to select the best operation
-		SelectBestOperation selectOp = new SelectBestOperation(this.ml, this.allowJoins, this.maxJoinNodes);		
+		SelectBestOperation selectOp = new SelectBestOperation(this.ml, this.allowJoins, this.prefJoins, 
+				this.maxJoinNodes);		
 
-		// operation counter 
-		int ocount = 0;
-		
 		// create root node		
-		this.createRootNode();		
-		System.out.println("initial message length = " + Math.round(this.messageLength));
-		
+		this.createRootNode();						
 		boolean grow = true;	
 		while(grow){
 			
@@ -56,24 +55,13 @@ public class DecisionGraph{
 			Operation bestOp = selectOp.select(this);						
 			
 			// if nothing can be done to reduce message length, end the while-loop	
-			if(bestOp.getSavings() <= 0){
-				grow = false;	
-				System.out.println("No further improvements possible!");
-				System.out.println("The final graph has " + this.leaves.size() + " leaves");
-			}			
+			if(bestOp.getSavings() <= 0) grow = false;								
 		
 			// if message length can be reduced, perform operation on the graph
-			else{			
-				ocount++;
+			else{						
 				bestOp.perform();
 				bestOp.updateLeaves(this.leaves);				
-				this.updateMessageLength(bestOp.getSavings());				
-				System.out.println("------------------------------------------");
-				System.out.println("Operation " + ocount + ":");
-				bestOp.getInfo();
-				System.out.println("Now, the graph has " + this.leaves.size() + " leaves");
-				System.out.println("The new message length is: " + Math.round(this.messageLength));
-				System.out.println("------------------------------------------ \n");
+				this.updateMessageLength(bestOp.getSavings());								
 			}				
 		}			
 	}	
@@ -83,7 +71,7 @@ public class DecisionGraph{
 	 * @param row - the data record that should be classified	
 	 * @return the predicted class value for the data record
 	 */
-	protected String classify(DataRow row){	
+	protected String classify(DataRow row){			
 		return classify(row, this.root);
 	}
 	
@@ -96,12 +84,12 @@ public class DecisionGraph{
 	private String classify(DataRow row, TreeNode node){		
 		
 		// if the node is a leaf, return the most frequent class in the node
-		if(node.isLeaf()){			
+		if(node.isLeaf()){					
 			return node.getMostFreqClass().toString();
 		}
 		
 		// if the node is a join node, just skip it and follow the (single) branch
-		else if(node.isJoin()){
+		else if(node.isJoin()){			
 			return classify(row, node.getChildren().get(0));
 		}
 		
@@ -109,7 +97,7 @@ public class DecisionGraph{
 		else{			
 			
 			// get the splitting attribute in the node and check which column contains it
-			String attr = node.getSplitAttribute();							
+			String attr = node.getSplitAttribute();					
 			int col = this.trainingData.getColIndex(attr);		
 			
 			// Distinguish between a split on a (1) categorical and a (2) numerical/continuous attribute		

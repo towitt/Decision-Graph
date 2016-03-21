@@ -90,17 +90,17 @@ public class Data {
 	 * @param condAttr - the attribute used to partition the data
 	 * @return a map including the subsets of the data
 	 */
-	protected HashMap<DataCell, Data> partition(String condAttr) {		
-		
+	protected HashMap<DataCell, Data> partition(String condAttr) {							
+			
 		// get the index of the attribute used to partition the data into subsets
 		int condAttrIndex = this.colIndex.get(condAttr);	
 		
 		// create the map and fill it with empty data objects
-		HashMap<DataCell, Data> subsetMap = Maps.newHashMap();				
-		for(DataCell condValue : this.getColValues(condAttr)){
+		HashMap<DataCell, Data> subsetMap = Maps.newHashMap();						
+		for(DataCell condValue : this.getColValues(condAttr)){					
 			
 			// create the (empty) data object
-			Data subset = new Data(new ArrayList<DataRow>(), this);
+			Data subset = new Data(new ArrayList<DataRow>(), this);					
 			
 			// remove the attribute that was used to partition the data
 			subset.setAttributes(RemoveAttribute.rm(subset.getAttributes(), condAttr));

@@ -44,6 +44,12 @@ public class DecisionGraphNodeModel extends NodeModel {
 	public static final SettingsModelBoolean m_joins = 
 			new SettingsModelBoolean(CFGKEY_JOINS, DEFAULT_JOINS);
 	
+	// always prefer joins 
+	static final String CFGKEY_PREFJOINS = "Always prefer join operation";
+	static final boolean DEFAULT_PREFJOINS = false;
+	public static final SettingsModelBoolean m_prefjoins = 
+			new SettingsModelBoolean(CFGKEY_PREFJOINS, DEFAULT_PREFJOINS);
+	
 	// restrict the number of nodes which form a join?
 	static final String CFGKEY_RESTRICTJOINNODES = "Restrict max. number of nodes in a join";
 	static final boolean DEFAULT_RESTRICTJOINNODES = false;
@@ -83,15 +89,15 @@ public class DecisionGraphNodeModel extends NodeModel {
         
         // obtain the number of distinct class values
         double C = (double) trainingData.getColValues(trainingData.getClassAttribute()).size();
-               
+                       
         // create the Message Length object
         MessageLength ml = new MessageLength(m_alpha.getDoubleValue(), C);
                
         // learn the decision graph    
         if(!m_restrictjoinnodes.getBooleanValue()) m_maxjoinnodes.setIntValue(Integer.MAX_VALUE);     
-		DecisionGraph graph = new DecisionGraph(trainingData, ml, m_joins.getBooleanValue(),
-				m_maxjoinnodes.getIntValue());				
-			
+		DecisionGraph graph = new DecisionGraph(trainingData, ml, m_joins.getBooleanValue(), 
+				m_prefjoins.getBooleanValue(), m_maxjoinnodes.getIntValue());				
+				
 		// make prediction for test data set
 		BufferedDataTable testData = inData[1];
         CellFactory cellFactory = 
@@ -166,6 +172,7 @@ public class DecisionGraphNodeModel extends NodeModel {
         m_class.saveSettingsTo(settings);
         m_alpha.saveSettingsTo(settings);
         m_joins.saveSettingsTo(settings); 
+        m_prefjoins.saveSettingsTo(settings); 
         m_restrictjoinnodes.saveSettingsTo(settings);      
         m_maxjoinnodes.saveSettingsTo(settings);
     }
@@ -179,6 +186,7 @@ public class DecisionGraphNodeModel extends NodeModel {
         m_class.loadSettingsFrom(settings);
         m_alpha.loadSettingsFrom(settings);
         m_joins.loadSettingsFrom(settings);
+        m_prefjoins.loadSettingsFrom(settings);
         m_restrictjoinnodes.loadSettingsFrom(settings);      
         m_maxjoinnodes.loadSettingsFrom(settings);
     }
@@ -192,6 +200,7 @@ public class DecisionGraphNodeModel extends NodeModel {
         m_class.validateSettings(settings);
         m_alpha.validateSettings(settings);
         m_joins.validateSettings(settings);
+        m_prefjoins.validateSettings(settings);
         m_restrictjoinnodes.validateSettings(settings);      
         m_maxjoinnodes.validateSettings(settings);
         

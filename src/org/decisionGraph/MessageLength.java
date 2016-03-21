@@ -52,7 +52,7 @@ public class MessageLength {
 		int nroots = this.treeRootSet.size();
 		while(nroots > 0){
 			
-			// tell the list that a new iteration is started
+			// tell the list that a new iteration starts
 			this.joinList.newIteration();			
 			
 			// add the bits needed to communicate all subtrees
@@ -70,7 +70,10 @@ public class MessageLength {
 				
 				// add bits needed to transmit join pattern 
 				if(joinList.getNewNodes().size() > 1){
+					System.out.println("ml = " + ml);
+					System.out.println("add join pattern length");					
 					ml += encodeJoinPattern();				
+					System.out.println("ml = " + ml);
 				}
 			}			
 			nroots = this.treeRootSet.size();
@@ -137,7 +140,7 @@ public class MessageLength {
 		else if(node.isJoin()){
 			
 			// add bits needed in the structure message
-			if(p != 0) ml += (Math.log(1/(1 - p)) / Math.log(2));	
+			//if(p != 0) ml += (Math.log(1/(1 - p)) / Math.log(2));	
 			
 			// add join node to open list		
 			this.joinList.add(node);			
@@ -168,7 +171,7 @@ public class MessageLength {
 	 * @param leaf - the leaf that should be encoded	
 	 * @return the length of the encoded message
 	 */
-	private double encodeCategory(TreeNode leaf){
+	public double encodeCategory(TreeNode leaf){
 		
 		// initialize message length
 		double ml = 0.0;
@@ -205,7 +208,7 @@ public class MessageLength {
 	 * @param p - the probability that the node is NOT a leaf
 	 * @return the length of the encoded message
 	 */
-	private double encodeLeafNode(TreeNode leaf, double p){
+	public double encodeLeafNode(TreeNode leaf, double p){
 		
 		// add bits needed to express distribution of classes within leaf (category)
 		double ml = encodeCategory(leaf);	

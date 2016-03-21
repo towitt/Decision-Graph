@@ -4,10 +4,13 @@ public class SelectBestOperation {
 	
 	private MessageLength ml;
 	private boolean allowJoins;
+	private boolean prefJoins;
 	private int maxJoinNodes;
 
-	public SelectBestOperation(MessageLength messageLength, boolean allowJoins, int maxJoinNodes){		
+	public SelectBestOperation(MessageLength messageLength, boolean allowJoins, 
+			boolean prefJoins, int maxJoinNodes){		
 		this.allowJoins = allowJoins;
+		this.prefJoins = prefJoins;
 		this.ml = messageLength;
 		this.maxJoinNodes = maxJoinNodes;
 	}
@@ -18,9 +21,13 @@ public class SelectBestOperation {
 		if(!allowJoins) return split;
 		
 		JoinOperation join = SelectBestJoin.select(tree.getLeaves(), tree.getRoot(), tree.getML(), this.ml,
-				this.maxJoinNodes);
+				this.maxJoinNodes);		
 		
-		if(split.getSavings() < join.getSavings()) return join;
+		if(this.prefJoins){		
+			if(join.getSavings() > 0) return join;
+			return split;
+			}
+			if(split.getSavings() < join.getSavings()) return join;
 		return split;
 	}
 }

@@ -7,11 +7,20 @@
     </shortDescription>
     
     <fullDescription>
-        <intro>Insert long description here...</intro>
-        
-        
-        <option name="short name of first option (like in the dialog)">description of first option</option>
-        <option name="short name of second option (like in the dialog)">description of second option</option>
+        <intro> Decision graph node (learner and predictor) for supervised concept learning. </intro>
+            
+        <option name="class attribute"> The column containing the class of instances. This must be a nominal variable. For string
+  variables with too many distinct values the execution may fail when no domain information is available. </option>
+        <option name="alpha-parameter of Beta prior">The single parameter of the generalized symmetric Beta prior distribution
+  used to encode the leaf categories. This must be a number between 0 and 1.</option>
+  	<option name="allow joins">If this option is not checked, the node learner will construct an ordinary decision tree using the MML
+  principle to select the splitting attributes.</option>
+  <option name="prefer joins">If this option is checked, the join operation with the largest savings in message length (if
+  savings are larger than zero) will always be preferred to the best split operation. If unchecked, the operation with the highest
+  communication savings (split or join) will be performed in each iteration.</option>
+   <option name="max. nr. of nodes in join">This option allows to restrict the maximal number of nodes possibly involved in one
+  join. For example, it can be used to allow only binary joins.</option>	
+  
         <!-- possibly more options that can also be grouped by tabs -->
         <!--
         <tab name="Standard Options">
@@ -25,9 +34,10 @@
     </fullDescription>
     
     <ports>
-        <inPort index="0" name="Training Data">Description of first input port...</inPort>
+        <inPort index="0" name="Training Data">Training Data with nominal class attribute</inPort>
+        <inPort index="1" name="Test Data">Test Data (same table spec as training data)</inPort>
         <!-- possibly more input ports here-->
-        <outPort index="0" name="Classified Data">Description of first output port...</outPort>
+        <outPort index="0" name="Classified Data"> Classified Data</outPort>
         <!-- possibly more output ports here-->
     </ports>    
     <views>
